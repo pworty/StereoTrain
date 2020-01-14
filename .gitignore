@@ -266,3 +266,4 @@ game.py
 game_assets/
 menu/
 sound_source.py
+.idea/vcs.xml
