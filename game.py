@@ -43,7 +43,7 @@ class Game():
             self.animation_count = 0
         self.img = self.player_imgs[self.animation_count]
         self.window.blit(self.img, self.window_rect.center)
-        pygame.draw.rect(self.window, self.player_color, self.player_rect)
+        # pygame.draw.rect(self.window, self.player_color, self.player_rect)
         pygame.display.update()
         self.animation_count += 1
 
