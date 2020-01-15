@@ -18,6 +18,7 @@ class Game:
         self.bg = pygame.Color("black")
 
         self.animation_count = 0
+        self.sound_delay = 0
         self.player_images = [
             pygame.image.load(
                 os.path.join("game_assets/player/idle", "survivor-idle_rifle_" + str(x) + ".png"))
@@ -60,6 +61,7 @@ class Game:
                         pass
 
             self.draw(pos)
+            self.play_sound()
 
         pygame.quit()
 
@@ -67,12 +69,11 @@ class Game:
         self.window.fill((0, 0, 0))
         if int(self.animation_count) >= len(self.player_images):
             self.animation_count = 0
-            self.sound_source.play_hint(self.angle)
         self.img = self.player_images[int(self.animation_count)]
         self.rotate_player(pos)
         self.window.blit(self.img, self.player_rect)
         pygame.display.update()
-        self.animation_count += 0.25
+        self.animation_count += 0.5
 
     def rotate_player(self, pos):
         mouse_x, mouse_y = pos
@@ -86,6 +87,12 @@ class Game:
         if self.show is True:
             self.sound_source.place_source_pointer(self.window)
             self.player_pointer.rotate_pointer(self.window, self.angle)
+
+    def play_sound(self):
+        if self.sound_delay == 120:
+            self.sound_source.play_hint(self.angle)
+            self.sound_delay = 0
+        self.sound_delay += 1
 
     def guess(self):
         pass
