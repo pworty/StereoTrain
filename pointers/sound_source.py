@@ -10,7 +10,8 @@ class SoundSource:
         self.pos = pygame.math.Vector2(self.player_rect.center)
         self.offset = pygame.math.Vector2(400, 0)
         self.source_img = None
-        self.source_pointer = pygame.image.load(os.path.join("game_assets/pointers/Star_yellow.png"))
+        self.source_pointer = pygame.image.load(os.path.join(
+            "../game_assets/pointers/Star_yellow.png"))
         self.source_rect = self.source_pointer.get_rect()
         self.angle = random.randint(0, 360)
 
@@ -20,12 +21,23 @@ class SoundSource:
         self.vol_right = 0
 
     def place_source_pointer(self, window):
+        """
+        Places sound source star mark
+        :param window: surface
+        :return: None
+        """
         self.source_img = pygame.transform.rotozoom(self.source_pointer, int(self.angle), 1)
         offset_rotated = self.offset.rotate(-self.angle)
         self.source_rect = self.source_img.get_rect(center=self.pos + offset_rotated)
         window.blit(self.source_img, self.source_rect)
 
     def play_hint(self, angle):
+        """
+        Plays sound with regard to mark position (adjusting left and right channel volume)
+        :param angle: int
+        :return: None
+        """
+        # Calculate the volume in each channel using angle player is looking at
         new_angle = (angle - self.angle) % 360
         if new_angle >= 180:
             self.vol_left = 1
