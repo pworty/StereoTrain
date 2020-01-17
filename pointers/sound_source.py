@@ -2,16 +2,15 @@ import pygame
 import os
 import random
 
+from pointers.pointer import Pointer
 
-class SoundSource:
+
+class SoundSource(Pointer):
     def __init__(self, player_rect):
-        self.player_rect = player_rect
-        self.pivot = self.player_rect.center
-        self.pos = pygame.math.Vector2(self.player_rect.center)
-        self.offset = pygame.math.Vector2(400, 0)
+        super().__init__(player_rect)
         self.source_img = None
         self.source_pointer = pygame.image.load(os.path.join(
-            "../game_assets/pointers/Star_yellow.png"))
+            "game_assets/pointers/Star_yellow.png"))
         self.source_rect = self.source_pointer.get_rect()
         self.angle = random.randint(0, 360)
 

@@ -265,5 +265,5 @@ __init__.py
 game.py
 game_assets/
 menu/
-sound_source.py
+pointers/sound_source.py
 .idea/vcs.xml

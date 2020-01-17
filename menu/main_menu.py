@@ -16,6 +16,11 @@ class MainMenu(Button):
                                     self.text_idle_color)
 
     def main_menu(self, window):
+        """
+        Bring up main menu to start the game
+        :param window: surface
+        :return: None
+        """
         run = True
         clock = pygame.time.Clock()
         fps = 60

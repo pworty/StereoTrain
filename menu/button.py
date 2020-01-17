@@ -1,5 +1,4 @@
 import pygame
-import os
 
 
 class Button:
@@ -13,6 +12,12 @@ class Button:
         self.text_color = text_color
 
     def draw(self, window, outline=None):
+        """
+        Displays button with text and outline
+        :param window: surface
+        :param outline: color
+        :return: None
+        """
         if outline:
             pygame.draw.rect(window, outline,
                              (self.x - 2, self.y - 2, self.width + 4, self.height + 4),
@@ -26,7 +31,9 @@ class Button:
                                self.y + (self.height / 2 - text.get_height() / 2)))
 
     def is_over(self, pos):
-        if self.x + self.width > pos[0] > self.x:
-            if self.y + self.height > pos[1] > self.y:
-                return True
-        return False
+        """
+
+        :param pos:
+        :return:
+        """
+        return self.x + self.width > pos[0] > self.x and self.y + self.height > pos[1] > self.y

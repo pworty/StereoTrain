@@ -1,15 +1,14 @@
 import pygame
 import os
 
+from pointers.pointer import Pointer
 
-class PlayerPointer:
+
+class PlayerPointer(Pointer):
     def __init__(self, player_rect):
-        self.player_rect = player_rect
-        self.pivot = self.player_rect.center
-        self.pos = pygame.math.Vector2(self.player_rect.center)
-        self.offset = pygame.math.Vector2(400, 0)
+        super().__init__(player_rect)
         self.pointer_img = None
-        self.player_pointer = pygame.image.load(os.path.join("../game_assets/pointers/Star_red.png"))
+        self.player_pointer = pygame.image.load(os.path.join("game_assets/pointers/Star_red.png"))
         self.pointer_rect = self.player_pointer.get_rect()
 
     def rotate_pointer(self, window, angle):
