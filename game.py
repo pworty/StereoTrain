@@ -4,9 +4,7 @@ import math
 
 from player_pointer import PlayerPointer
 from sound_source import SoundSource
-
-pygame.init()
-os.environ['SDL_VIDEO_CENTERED'] = '1'
+from menu.button import Button
 
 
 class Game:
@@ -32,15 +30,30 @@ class Game:
         self.pointer_img = None
         self.pointer_rect = None
 
-        self.show = True
+        self.show_hint = False
         self.sound_source = SoundSource(self.player_rect)
         self.player_pointer = PlayerPointer(self.player_rect)
+
+        self.idle_color = (0, 0, 0)
+        self.active_color = (255, 255, 255)
+        self.outline_color = (255, 255, 255)
+        self.text_idle_color = (255, 255, 255)
+        self.text_active_color = (0, 0, 0)
+        self.start_guess_btn = Button(self.idle_color, 1400, 800, 190, 90, 'Start',
+                                      self.text_idle_color)
+        self.reset_btn = Button(self.idle_color, 10, 10, 190, 90, 'Reset', self.text_idle_color)
+        self.show_pointers_btn = Button(self.idle_color, 1400, 10, 190, 90, 'Show',
+                                        self.text_idle_color)
+        self.buttons = [self.start_guess_btn, self.reset_btn, self.show_pointers_btn]
+
+        self.game_over = False
 
     def run(self):
         run = True
         clock = pygame.time.Clock()
         fps = 60
         pos = None
+        pressed = False
         while run:
             clock.tick(fps)
             for event in pygame.event.get():
@@ -50,18 +63,38 @@ class Game:
                 pos = pygame.mouse.get_pos()
 
                 if pygame.mouse.get_pressed()[0]:
-                    self.rotation = True
+                    if pressed is False:
+                        if self.start_guess_btn.is_over(pos):
+                            if self.start_guess_btn.text == 'Start':
+                                if self.game_over:
+                                    run = False
+                                    return True
+                                else:
+                                    self.start_guess_btn.text = 'Guess'
+                            elif self.start_guess_btn.text == 'Guess':
+                                if abs(self.angle - self.sound_source.angle) <= 10 or abs(
+                                        self.angle + 360 - self.sound_source.angle) <= 10:
+                                    self.start_guess_btn.text = 'Start'
+                                    self.show_hint = True
+                                    self.game_over = True
+                        elif self.show_pointers_btn.is_over(pos):
+                            if self.show_hint is True:
+                                self.show_hint = False
+                            else:
+                                self.show_hint = True
+                        elif self.reset_btn.is_over(pos):
+                            run = False
+                            return True
+                        else:
+                            self.rotation = True
+                        pressed = True
                 else:
                     self.rotation = False
-
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_LEFT:
-                        pass
-                    elif event.key == pygame.K_DOWN:
-                        pass
+                    pressed = False
 
             self.draw(pos)
-            self.play_sound()
+            if self.start_guess_btn.text == 'Guess':
+                self.play_sound()
 
         pygame.quit()
 
@@ -72,6 +105,14 @@ class Game:
         self.img = self.player_images[int(self.animation_count)]
         self.rotate_player(pos)
         self.window.blit(self.img, self.player_rect)
+        for btn in self.buttons:
+            btn.draw(self.window, self.outline_color)
+            if btn.is_over(pos):
+                btn.color = self.active_color
+                btn.text_color = self.text_active_color
+            else:
+                btn.color = self.idle_color
+                btn.text_color = self.text_idle_color
         pygame.display.update()
         self.animation_count += 0.5
 
@@ -84,7 +125,7 @@ class Game:
         x, y = self.player_rect.center
         self.player_rect = self.img.get_rect()
         self.player_rect.center = (x, y)
-        if self.show is True:
+        if self.show_hint is True:
             self.sound_source.place_source_pointer(self.window)
             self.player_pointer.rotate_pointer(self.window, self.angle)
 
@@ -94,18 +135,16 @@ class Game:
             self.sound_delay = 0
         self.sound_delay += 1
 
-    def guess(self):
-        pass
 
-    def show_hint(self):
-        if self.show is True:
-            self.show = False
-        else:
-            self.show = True
-
-    def reset(self):
-        pass
+def main(restart):
+    pygame.init()
+    os.environ['SDL_VIDEO_CENTERED'] = '1'
+    g = Game()
+    if restart:
+        g.start_guess_btn.text = 'Guess'
+    if g.run():
+        main(True)
 
 
-g = Game()
-g.run()
+main(False)
+pygame.quit()

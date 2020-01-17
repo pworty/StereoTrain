@@ -39,6 +39,5 @@ class SoundSource:
                 self.vol_left = (new_angle - 90) / 90
             elif new_angle < 90:
                 self.vol_left = (90 - new_angle) / 90
-        print(new_angle, self.vol_left, self.vol_right)
         self.channel.set_volume(self.vol_left, self.vol_right)
         self.hint_sound.play()
